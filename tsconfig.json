@@ -1,6 +1,6 @@
 {
-    "include": ["packages/*/*/src"],
-    "exclude": ["node_modules", "packages/*/*/node_modules"],
+    "include": ["packages/*/src"],
+    "exclude": ["node_modules", "packages/*/node_modules"],
     "compilerOptions": {
         "target": "es2019",
         "module": "esnext",
