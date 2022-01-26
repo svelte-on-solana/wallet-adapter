@@ -5,7 +5,7 @@ import type {
     SendTransactionOptions,
     SignerWalletAdapter,
     SignerWalletAdapterProps,
-    Wallet,
+	WalletReadyState,
     WalletError,
     WalletName,
 } from '@solana/wallet-adapter-base';
@@ -15,14 +15,17 @@ import { get, writable } from 'svelte/store';
 import { WalletNotSelectedError } from './errors';
 import { getLocalStorage, setLocalStorage } from './localStorage';
 
+
 type ErrorHandler = (error: WalletError) => void;
 type WalletConfig = Pick<WalletStore, 'wallets' | 'autoConnect' | 'localStorageKey' | 'onError'>;
 type WalletStatus = Pick<WalletStore, 'connected' | 'publicKey'>;
 
 interface WalletStore {
+	// props
     autoConnect: boolean;
-    wallets: Wallet[];
+    wallets: Adapter[];
 
+	// wallet state
     adapter: Adapter | null;
     connected: boolean;
     connecting: boolean;
@@ -30,23 +33,20 @@ interface WalletStore {
     localStorageKey: string;
     onError: ErrorHandler;
     publicKey: PublicKey | null;
-    ready: boolean;
-    wallet: Wallet | null;
-    walletsByName: Record<WalletName, Wallet>;
+    ready: WalletReadyState;
+    wallet: Adapter | null;
+    walletsByName: Record<WalletName, Adapter>;
     name: WalletName | null;
 
+	// wallet methods
     connect(): Promise<void>;
-
     disconnect(): Promise<void>;
-
     select(walletName: WalletName): void;
-
     sendTransaction(
         transaction: Transaction,
         connection: Connection,
         options?: SendTransactionOptions
     ): Promise<TransactionSignature>;
-
     signAllTransactions: SignerWalletAdapterProps['signAllTransactions'] | undefined;
     signMessage: MessageSignerWalletAdapterProps['signMessage'] | undefined;
     signTransaction: SignerWalletAdapterProps['signTransaction'] | undefined;
@@ -57,6 +57,7 @@ export const walletStore = createWalletStore();
 function addAdapterEventListeners(adapter: Adapter) {
     const { onError } = get(walletStore);
 
+	adapter.on('readyStateChange', onReadyStateChange);
     adapter.on('connect', onConnect);
     adapter.on('disconnect', onDisconnect);
     adapter.on('error', onError);
@@ -81,13 +82,13 @@ async function connect(): Promise<void> {
     const { connected, connecting, disconnecting, wallet, ready, adapter } = get(walletStore);
     if (connected || connecting || disconnecting) return;
 
-    if (!wallet || !adapter) throw newError(new WalletNotSelectedError());
+    if (!adapter) throw newError(new WalletNotSelectedError());
 
     if (!ready) {
         walletStore.resetWallet();
 
         if (typeof window !== 'undefined') {
-            window.open(wallet.url, '_blank');
+            window.open(adapter.url, '_blank');
         }
 
         throw newError(new WalletNotReadyError());
@@ -115,7 +116,7 @@ function createWalletStore() {
         localStorageKey: 'walletAdapter',
         onError: (error: WalletError) => console.error(error),
         publicKey: null,
-        ready: false,
+        ready: "NotDetected" as WalletReadyState,
         wallet: null,
         name: null,
         walletsByName: {},
@@ -128,45 +129,32 @@ function createWalletStore() {
         signMessage: undefined,
     });
 
-    function updateWalletState(wallet: Wallet | null, adapter: Adapter | null) {
+    function updateWalletState(adapter: Adapter | null) {
         updateAdapter(adapter);
-        update((store) => ({
+        update((store: WalletStore) => ({
             ...store,
-            name: wallet?.name || null,
-            wallet,
-            ready: false,
+            name: adapter?.name || null,
+            wallet: adapter,
+            // ready: false,
+			ready: adapter?.readyState,
             publicKey: adapter?.publicKey || null,
             connected: adapter?.connected || false,
         }));
 
-        if (!(wallet?.name && adapter)) return;
+        if (!adapter) return;
 
-        // Asynchronously update the ready state
-        const waiting = wallet.name;
-        (async function () {
-            const ready = await adapter.ready();
-            // If the selected wallet hasn't changed while waiting, update the ready state
-            if (wallet.name === waiting) {
-                update((store) => ({
-                    ...store,
-                    ready,
-                }));
-
-                if (shouldAutoConnect()) {
-                    autoConnect();
-                }
-            }
-        })();
+		if (shouldAutoConnect()) {
+			autoConnect();
+		}
     }
 
     function updateWalletName(name: WalletName | null) {
         const { localStorageKey, walletsByName } = get(walletStore);
 
-        const wallet = walletsByName?.[name as WalletName] ?? null;
-        const adapter = wallet && wallet.adapter;
+        const adapter = walletsByName?.[name as WalletName] ?? null;
 
         setLocalStorage(localStorageKey, name);
-        updateWalletState(wallet, adapter);
+        updateWalletState(adapter);
     }
 
     function updateAdapter(adapter: Adapter | null) {
@@ -207,21 +195,21 @@ function createWalletStore() {
             addAdapterEventListeners(adapter);
         }
 
-        update((store) => ({ ...store, adapter, signTransaction, signAllTransactions, signMessage }));
+        update((store: WalletStore) => ({ ...store, adapter, signTransaction, signAllTransactions, signMessage }));
     }
 
     return {
         resetWallet: () => updateWalletName(null),
-        setConnecting: (connecting: boolean) => update((store) => ({ ...store, connecting })),
-        setDisconnecting: (disconnecting: boolean) => update((store) => ({ ...store, disconnecting })),
-        setReady: (ready: boolean) => update((store) => ({ ...store, ready })),
+        setConnecting: (connecting: boolean) => update((store: WalletStore) => ({ ...store, connecting })),
+        setDisconnecting: (disconnecting: boolean) => update((store: WalletStore) => ({ ...store, disconnecting })),
+        setReady: (ready: WalletReadyState) => update((store: WalletStore) => ({ ...store, ready })),
         subscribe,
-        updateConfig: (walletConfig: WalletConfig & { walletsByName: Record<WalletName, Wallet> }) =>
-            update((store) => ({
+        updateConfig: (walletConfig: WalletConfig & { walletsByName: Record<WalletName, Adapter> }) =>
+            update((store: WalletStore) => ({
                 ...store,
                 ...walletConfig,
             })),
-        updateStatus: (walletStatus: WalletStatus) => update((store) => ({ ...store, ...walletStatus })),
+        updateStatus: (walletStatus: WalletStatus) => update((store: WalletStore) => ({ ...store, ...walletStatus })),
         updateWallet: (walletName: WalletName) => updateWalletName(walletName),
     };
 }
@@ -247,7 +235,7 @@ export async function initialize({
     localStorageKey = 'walletAdapter',
     onError = (error: WalletError) => console.error(error),
 }: WalletConfig): Promise<void> {
-    const walletsByName = wallets.reduce<Record<WalletName, Wallet>>((walletsByName, wallet) => {
+    const walletsByName = wallets.reduce<Record<WalletName, Adapter>>((walletsByName, wallet) => {
         walletsByName[wallet.name] = wallet;
         return walletsByName;
     }, {});
@@ -274,8 +262,8 @@ function newError(error: WalletError): WalletError {
 }
 
 function onConnect() {
-    const { adapter, wallet } = get(walletStore);
-    if (!adapter || !wallet) return;
+    const { adapter } = get(walletStore);
+    if (!adapter) return;
 
     walletStore.updateStatus({
         publicKey: adapter.publicKey,
@@ -287,10 +275,18 @@ function onDisconnect() {
     walletStore.resetWallet();
 }
 
+function onReadyStateChange() {
+	const { adapter } = get(walletStore);
+	if (!adapter) return;
+
+	walletStore.setReady(adapter.readyState);
+}
+
 function removeAdapterEventListeners(): void {
     const { adapter, onError } = get(walletStore);
     if (!adapter) return;
 
+	adapter.off('readyStateChange', onReadyStateChange);
     adapter.off('connect', onConnect);
     adapter.off('disconnect', onDisconnect);
     adapter.off('error', onError);
