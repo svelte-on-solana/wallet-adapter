@@ -168,7 +168,7 @@ export default {
 	  AnchorConnectionProvider } from "@svelte-on-solana/wallet-adapter-ui";
   import { clusterApiUrl } from "@solana/web3.js";
   import idl from '../../../target/idl/<my-anchor-project>.json'; // in case you are using Anchor
-  import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+  import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
 
   const localStorageKey = "walletAdapter";
   const network = clusterApiUrl('devnet'); // localhost or mainnet
