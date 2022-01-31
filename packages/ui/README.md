@@ -80,8 +80,8 @@ And then in the **__layout.svelte** component you can import the wallets and set
   import idl from '../../../target/idl/<my-anchor-project>.json'; // in case you are using Anchor
   import {
 	  WalletProvider,
-	  AnchorConnectionProvider,
-	  WalletMultiButton } from '@svelte-on-solana/wallet-adapter-svelte-ui';
+	  WalletMultiButton,
+	  AnchorConnectionProvider } from '@svelte-on-solana/wallet-adapter-svelte-ui';
 
   const localStorageKey = 'walletAdapter';
   const network = clusterApiUrl('devnet'); // localhost or mainnet
@@ -156,12 +156,16 @@ export default {
 };
 ```
 
-Then in `App.svelte` or the entry point of your SPA, you can setup the wallet and components like this.
+> Then in `App.svelte` or the entry point of your SPA, you can setup the wallet and components like this.
 
 ```html
 <script lang="ts">
   import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
-  import { workSpace, WalletProvider, WalletMultiButton, AnchorConnectionProvider } from "@svelte-on-solana/wallet-adapter-ui";
+  import {
+	  workSpace,
+	  WalletProvider,
+	  WalletMultiButton,
+	  AnchorConnectionProvider } from "@svelte-on-solana/wallet-adapter-ui";
   import { clusterApiUrl } from "@solana/web3.js";
   import idl from '../../../target/idl/<my-anchor-project>.json'; // in case you are using Anchor
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
@@ -173,11 +177,11 @@ Then in `App.svelte` or the entry point of your SPA, you can setup the wallet an
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
-<AnchorConnectionProvider {network} {idl} />
+<ConnectionProvider {network}/> or <AnchorConnectionProvider {network} {idl} />
 <WalletMultiButton />
 
 {#if $walletStore?.connected}
-	<div>My wallet is connected</div>
+  <div>My wallet is connected</div>
 {/if}
 ```
 
@@ -185,6 +189,6 @@ Then in `App.svelte` or the entry point of your SPA, you can setup the wallet an
 
 See example implementations of the `@solana/wallet-adapter-svelte-ui` library.
 
--   [Solana svelte counter][1]
+-   [Demo site][1]
 
 [1]: https://github.com/silvestrevivo/solana-svelte-counter

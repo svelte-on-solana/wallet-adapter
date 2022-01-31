@@ -4,8 +4,8 @@ Modular TypeScript wallet adapter and UI components for Solana/Anchor applicatio
 
 ![Wallets](wallets-adapter.png)
 
-- [Demo Repo](https://github.com/silvestrevivo/solana-svelte-counter/)
-- [Demo Site](https://solana-svelte-counter.netlify.app/)
+- [Demo repo](https://github.com/silvestrevivo/solana-svelte-counter/)
+- [Demo site](https://solana-svelte-counter.netlify.app/)
 
 ## How to setup
 
