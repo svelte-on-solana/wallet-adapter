@@ -135,8 +135,7 @@ function createWalletStore() {
             ...store,
             name: adapter?.name || null,
             wallet: adapter,
-            // ready: false,
-			ready: adapter?.readyState,
+            ready: adapter?.readyState as WalletReadyState,
             publicKey: adapter?.publicKey || null,
             connected: adapter?.connected || false,
         }));
