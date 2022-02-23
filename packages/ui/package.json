@@ -3,6 +3,15 @@
 	"version": "0.1.0",
 	"author": "Svelte on Solana",
 	"repository": "https://github.com/svelte-on-solana/wallet-adapter",
+    "type": "module",
+    "module": "./lib/index.js",
+    "files": [
+        "lib",
+        "LICENSE"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
 	"scripts": {
 		"build": "svelte-kit package",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
@@ -24,7 +33,6 @@
 		"tslib": "^2.3.1",
 		"typescript": "^4.4.3"
 	},
-	"type": "module",
 	"dependencies": {
 		"eventemitter3": "^4.0.7"
 	}
