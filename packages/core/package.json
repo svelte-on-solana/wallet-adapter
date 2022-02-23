@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@svelte-on-solana/wallet-adapter-core",
-    "version": "0.1.0",
+    "version": "1.0.0-alpha.0",
     "author": "Svelte on Solana",
     "repository": "https://github.com/svelte-on-solana/wallet-adapter",
     "license": "Apache-2.0",
