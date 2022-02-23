@@ -1,5 +1,4 @@
 {
-    "private": true,
     "name": "@svelte-on-solana/wallet-adapter-core",
     "version": "1.0.0-alpha.0",
     "author": "Svelte on Solana",
