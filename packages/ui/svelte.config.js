@@ -18,10 +18,7 @@ const config = {
 					$lib: path.resolve('src/lib/')
 				}
 			}
-		},
-        package: {
-            dir: 'lib'
-        }
+		}
 	}
 };
 
