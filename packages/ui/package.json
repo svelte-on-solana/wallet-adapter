@@ -1,8 +1,13 @@
 {
 	"name": "@svelte-on-solana/wallet-adapter-ui",
-	"version": "0.1.0",
+	"version": "1.0.10-alpha.0",
 	"author": "Svelte on Solana",
 	"repository": "https://github.com/svelte-on-solana/wallet-adapter",
+	"type": "module",
+	"publishConfig": {
+		"access": "public",
+		"directory": "package"
+	},
 	"scripts": {
 		"build": "svelte-kit package",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
@@ -24,8 +29,8 @@
 		"tslib": "^2.3.1",
 		"typescript": "^4.4.3"
 	},
-	"type": "module",
 	"dependencies": {
 		"eventemitter3": "^4.0.7"
-	}
+	},
+	"gitHead": "c03df3528cbca29c3ba9276fd6367321eca42b65"
 }
