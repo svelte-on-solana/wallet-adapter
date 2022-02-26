@@ -1,4 +1,4 @@
-# `@solana/wallet-adapter-svelte-ui`
+# `@svelte-on-solana/wallet-adapter-ui`
 
 Pre-built components for integrating with Solana wallets using Svelte
 
@@ -187,8 +187,8 @@ export default {
 
 ## Example Implementation
 
-See example implementations of the `@solana/wallet-adapter-svelte-ui` library.
+See example implementations of the `@svelte-on-solana/wallet-adapter-ui` library.
 
--   [Demo site][1]
+- [Demo site][1]
 
-[1]: https://github.com/silvestrevivo/solana-svelte-counter
+[1]: https://github.com/silvestrevivo/solana-svelte-counter/tree/master/app
