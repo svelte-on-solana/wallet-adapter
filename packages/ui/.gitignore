@@ -3,4 +3,3 @@ node_modules
 /build
 /.svelte-kit
 /package
-/lib
