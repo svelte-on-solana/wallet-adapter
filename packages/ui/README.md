@@ -81,7 +81,7 @@ And then in the **\_\_layout.svelte** component you can import the wallets and s
 		WalletProvider,
 		WalletMultiButton,
 		ConnectionProvider
-	} from '@svelte-on-solana/wallet-adapter-svelte-ui';
+	} from '@svelte-on-solana/wallet-adapter-ui';
 
 	const localStorageKey = 'walletAdapter';
 	const network = clusterApiUrl('devnet'); // localhost or mainnet
