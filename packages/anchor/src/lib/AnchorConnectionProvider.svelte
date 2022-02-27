@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Connection } from '@solana/web3.js';
 	import type { Commitment, ConnectionConfig } from '@solana/web3.js';
-	import { workspace } from './workspace';
+	import { workSpace } from './workSpace';
 	import * as pkg from '@project-serum/anchor';
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
 
@@ -31,7 +31,7 @@
 			preflightCommitment: 'processed'
 		});
 		const program = new Program(idl, programID, provider);
-		workspace.set({
+		workSpace.set({
 			baseAccount,
 			connection,
 			provider,

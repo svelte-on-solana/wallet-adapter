@@ -1,10 +1,10 @@
 # `@svelte-on-solana/wallet-adapter-anchor`
 
-`AnchorConnectionProvider` component and `workspace` for Solana wallets using Svelte
+`AnchorConnectionProvider` component and `workSpace` for Solana wallets using Svelte
 
 ## Installing
 
-You have already installed the core package to run the wallet Svelte Store [@svelte-on-solana/wallet-adapter-core](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md) and the UI components to use the wallet [@svelte-on-solana/wallet-adapter-ui](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md/). Then install the `AnchorConnectionProvider` component and `workspace` file contained in this package.
+You have already installed the core package to run the wallet Svelte Store [@svelte-on-solana/wallet-adapter-core](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md) and the UI components to use the wallet [@svelte-on-solana/wallet-adapter-ui](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md/). Then install the `AnchorConnectionProvider` component and `workSpace` file contained in this package.
 
 ```shell
 npm i @svelte-on-solana/wallet-adapter-svelte-anchor
@@ -19,7 +19,7 @@ The `AnchorConnectionProvider` for Anchor Dapps accepts the next props.
 | network | `string` |         |
 | idl     | `Idl`    |         |
 
-It is automatically connected to the `workspace` defining all the parameters to share among the components in your Anchor Dapp **(baseAccount, connection, provider, program, systemProgram and network)**.
+It is automatically connected to the `workSpace` defining all the parameters to share among the components in your Anchor Dapp **(baseAccount, connection, provider, program, systemProgram and network)**.
 
 ## SvelteKit
 
@@ -30,7 +30,7 @@ In the **\_\_layout.svelte** component you can import the wallets and setup the 
 	import { onMount } from 'svelte';
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
 	import { WalletProvider, WalletMultiButton } from '@svelte-on-solana/wallet-adapter-ui';
-	import { AnchorConnectionProvider, workspace } from '@svelte-on-solana/wallet-adapter-anchor';
+	import { AnchorConnectionProvider, workSpace } from '@svelte-on-solana/wallet-adapter-anchor';
 	import { clusterApiUrl } from '@solana/web3.js';
 	import idl from '../../../target/idl/<my-anchor-project>.json';
 	import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
@@ -65,7 +65,7 @@ In `App.svelte` or the entry point of your SPA, you can setup the wallet and com
 <script lang="ts">
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
 	import { WalletProvider, WalletMultiButton } from '@svelte-on-solana/wallet-adapter-ui';
-	import { AnchorConnectionProvider, workspace } from '@svelte-on-solana/wallet-adapter-anchor';
+	import { AnchorConnectionProvider, workSpace } from '@svelte-on-solana/wallet-adapter-anchor';
 	import { clusterApiUrl } from '@solana/web3.js';
 	import idl from '../../../target/idl/<my-anchor-project>.json';
 	import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';

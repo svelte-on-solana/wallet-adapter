@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { Program, Provider, web3 } from '@project-serum/anchor';
 import type { Connection, Keypair } from '@solana/web3.js';
 
-export type Workspace = {
+export type WorkSpace = {
   baseAccount?: Keypair;
   connection: Connection;
   provider?: Provider;
@@ -11,4 +11,4 @@ export type Workspace = {
   network: string;
 };
 
-export const workspace = writable<Workspace>(undefined);
+export const workSpace = writable<WorkSpace>(undefined);
