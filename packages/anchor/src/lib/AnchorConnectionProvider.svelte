@@ -9,9 +9,10 @@
 
 	export let idl,
 		network: string,
-		config: Commitment | ConnectionConfig | undefined = 'processed',
-		programID: string;
+		config: Commitment | ConnectionConfig | undefined = 'processed';
 
+	const { PublicKey } = web3;
+	const programID = new PublicKey(idl.metadata.address);
 	const baseAccount = web3.Keypair.generate();
 	const systemProgram = web3.SystemProgram;
 	const connection = new Connection(network, config);
