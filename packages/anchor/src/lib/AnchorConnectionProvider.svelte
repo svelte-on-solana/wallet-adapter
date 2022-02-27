@@ -4,7 +4,6 @@
 	import { workspace } from './workspace';
 	import * as pkg from '@project-serum/anchor';
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
-	// import { PROGRAM_ID } from '$program/program';
 
 	const { web3, Provider, Program } = pkg;
 
@@ -13,7 +12,6 @@
 		config: Commitment | ConnectionConfig | undefined = 'processed',
 		programID: string;
 
-	// const programID = PROGRAM_ID;
 	const baseAccount = web3.Keypair.generate();
 	const systemProgram = web3.SystemProgram;
 	const connection = new Connection(network, config);
