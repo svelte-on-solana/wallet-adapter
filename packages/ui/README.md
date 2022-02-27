@@ -10,7 +10,7 @@ During this process, you will:
 
 -   📦 Install the base wallet adapters
 -   📦 Install the svelte adapter and svelte UI
--   🔨 Add the `ConnectionProvider` (`AnchorConnectionProvider` if you're using Anchor)
+-   🔨 Add the `ConnectionProvider` (`[AnchorConnectionProvider](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md)` if you're using Anchor)
 -   🔨 Add the `WalletProvider` component
 -   🔨 Add the `WalletMultiButton` component
 
@@ -27,7 +27,7 @@ npm i @svelte-on-solana/wallet-adapter-svelte-ui
 There are three components that you need to get set up:
 
 -   `WalletProvider`
--   `ConnectionProvider` (`AnchorConnectionProvider` if you're using Anchor)
+-   `ConnectionProvider` (`[AnchorConnectionProvider](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md)` if you're using Anchor)
 -   `WalletMultiButton`
 
 `WalletProvider` is a component used to initialize the wallet stores and add event listeners
@@ -53,7 +53,6 @@ Alternatively you can use `AnchorConnectionProvider` for Anchor Dapps.
 
 `WalletMultiButton` is a component used as the entry point to connect/disconnect a wallet.
 
-
 ## SvelteKit
 
 You have to adjust the **svelte.config.js** file to prepare the project for all the Solana packages previously installed.
@@ -65,46 +64,43 @@ const config = {
 	kit: {
 		// ...
 		define: {
-        'process.env.BROWSER': true
-      }
+			'process.env.BROWSER': true
+		}
 	}
 };
 ```
 
-And then in the **__layout.svelte** component you can import the wallets and setup the UI components.
+And then in the **\_\_layout.svelte** component you can import the wallets and setup the UI components.
 
 ```html
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { clusterApiUrl } from '@solana/web3.js';
-  import idl from '../../../target/idl/<my-anchor-project>.json'; // in case you are using Anchor
-  import {
-	  WalletProvider,
-	  WalletMultiButton,
-	  AnchorConnectionProvider } from '@svelte-on-solana/wallet-adapter-svelte-ui';
+	import { onMount } from 'svelte';
+	import { clusterApiUrl } from '@solana/web3.js';
+	import {
+		workSpace,
+		WalletProvider,
+		WalletMultiButton,
+		ConnectionProvider
+	} from '@svelte-on-solana/wallet-adapter-svelte-ui';
 
-  const localStorageKey = 'walletAdapter';
-  const network = clusterApiUrl('devnet'); // localhost or mainnet
+	const localStorageKey = 'walletAdapter';
+	const network = clusterApiUrl('devnet'); // localhost or mainnet
 
-  let wallets;
+	let wallets;
 
-  onMount(async () => {
-    const {
-      PhantomWalletAdapter,
-      SolflareWalletAdapter,
-    } = await import('@solana/wallet-adapter-wallets');
+	onMount(async () => {
+		const { PhantomWalletAdapter, SolflareWalletAdapter } = await import(
+			'@solana/wallet-adapter-wallets'
+		);
 
-    wallets = [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-    ];
-  });
+		wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
+	});
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
-<ConnectionProvider {network}/> or <AnchorConnectionProvider {network} {idl} />
+<ConnectionProvider {network} />
 <div>
-  <slot />
+	<slot />
 </div>
 <WalletMultiButton />
 ```
@@ -117,15 +113,16 @@ You have to adjust some stuff in the configuration in your project.
 
 ```json
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
-  "compilerOptions": {
-    "resolveJsonModule": true
-  },
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"compilerOptions": {
+		"resolveJsonModule": true
+	},
 
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+	"include": ["src/**/*"],
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*"]
 }
 ```
+
 > Install a few plugins to take care about JSON imports and built-on Node.js modules not available in the browser.
 
 ```shell
@@ -133,26 +130,27 @@ npm install -D @rollup/plugin-json rollup-plugin-node-builtins rollup-plugin-nod
 ```
 
 > Adjust `rollup.config.js` to import those plugins
+
 ```javascript
 // ... other imports
-import json from "@rollup/plugin-json";
-import builtins from "rollup-plugin-node-builtins";
-import globals from "rollup-plugin-node-globals";
+import json from '@rollup/plugin-json';
+import builtins from 'rollup-plugin-node-builtins';
+import globals from 'rollup-plugin-node-globals';
 
 export default {
-  // ... other configs
-  plugins: [
-    // ... other rollup plugins
-    resolve({
-      browser: true,
-      dedupe: ["svelte"],
-      preferBuiltins: false, // set this to false
-    }),
-    // ... more rollup plugins
-    json(),
-    globals(),
-    builtins(),
-  ]
+	// ... other configs
+	plugins: [
+		// ... other rollup plugins
+		resolve({
+			browser: true,
+			dedupe: ['svelte'],
+			preferBuiltins: false // set this to false
+		}),
+		// ... more rollup plugins
+		json(),
+		globals(),
+		builtins()
+	]
 };
 ```
 
@@ -160,35 +158,39 @@ export default {
 
 ```html
 <script lang="ts">
-  import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
-  import {
-	  workSpace,
-	  WalletProvider,
-	  WalletMultiButton,
-	  AnchorConnectionProvider } from "@svelte-on-solana/wallet-adapter-ui";
-  import { clusterApiUrl } from "@solana/web3.js";
-  import idl from '../../../target/idl/<my-anchor-project>.json'; // in case you are using Anchor
-  import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
+	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
+	import {
+		workSpace,
+		WalletProvider,
+		WalletMultiButton,
+		ConnectionProvider
+	} from '@svelte-on-solana/wallet-adapter-ui';
+	import { clusterApiUrl } from '@solana/web3.js';
+	import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 
-  const localStorageKey = "walletAdapter";
-  const network = clusterApiUrl('devnet'); // localhost or mainnet
+	const localStorageKey = 'walletAdapter';
+	const network = clusterApiUrl('devnet'); // localhost or mainnet
 
-  let wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
+	let wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
-<ConnectionProvider {network}/> or <AnchorConnectionProvider {network} {idl} />
+<ConnectionProvider {network} />
 <WalletMultiButton />
 
 {#if $walletStore?.connected}
-  <div>My wallet is connected</div>
+<div>My wallet is connected</div>
 {/if}
 ```
+
+## Working with Anchor
+
+If you work with Anchor you will need the `AnchorConnectionProvider` component and its workSpace [@svelte-on-solana/wallet-adapter-anchor](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md)
 
 ## Example Implementation
 
 See example implementations of the `@svelte-on-solana/wallet-adapter-ui` library.
 
-- [Demo site][1]
+-   [Demo site][1]
 
 [1]: https://github.com/silvestrevivo/solana-svelte-counter/tree/master/app

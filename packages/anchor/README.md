@@ -7,7 +7,7 @@
 You have already installed the core package to run the wallet Svelte Store [@svelte-on-solana/wallet-adapter-core](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md) and the UI components to use the wallet [@svelte-on-solana/wallet-adapter-ui](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md/). Then install the `AnchorConnectionProvider` component and `workSpace` file contained in this package.
 
 ```shell
-npm i @svelte-on-solana/wallet-adapter-svelte-anchor
+npm i @svelte-on-solana/wallet-adapter-anchor
 ```
 
 ## Set Up
