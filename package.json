@@ -36,7 +36,7 @@
         "fmt": "prettier --write '{*,**/*}.{js,ts,jsx,tsx,json}'",
         "lint": "eslint --ext .ts . && prettier --check '{*,**/*}.{js,ts,jsx,tsx,json}'",
         "lint:fix": "eslint --fix --ext .ts . && yarn fmt",
-        "nuke": "shx rm -rf {.,packages/*/*}/{node_modules,yarn.lock}"
+        "nuke": "shx rm -rf {.,packages/*}/{node_modules,yarn.lock}"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.16.5",
