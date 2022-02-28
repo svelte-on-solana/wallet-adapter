@@ -22,7 +22,7 @@ Once it is installed, you can use it and subscribe to its methods as an usual Sv
 </script>
 
 {#if $walletStore?.connected}
-    <div>My wallet is connected</div>
+<div>My wallet is connected</div>
 {/if}
 ```
 
@@ -30,5 +30,5 @@ Once it is installed, you can use it and subscribe to its methods as an usual Sv
 
 To complete the setup you will need to add some UI components which will provide the full experience to connect, disconnect and visualize address. You can choose between the [Svelte Template](https://github.com/sveltejs/template) or the [SvelteKit](https://kit.svelte.dev/) implementation. Both are using the same packages but setup is different. The UI packages offer different implementations for **Solana** and **Anchor**.
 
-- [Using Svelte Template](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md)
-- [Using SvelteKit](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md)
+-   [Using Svelte Template](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md#svelte-template)
+-   [Using SvelteKit](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md#sveltekit)
