@@ -32,6 +32,5 @@
 	"dependencies": {
 		"@project-serum/anchor": "^0.22.0",
 		"eventemitter3": "^4.0.7"
-	},
-	"gitHead": "c03df3528cbca29c3ba9276fd6367321eca42b65"
+	}
 }
