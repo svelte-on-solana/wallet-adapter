@@ -31,5 +31,12 @@
 	},
 	"dependencies": {
 		"eventemitter3": "^4.0.7"
-	}
+	},
+	"keywords": [
+		"svelte",
+		"wallet",
+		"adapter",
+		"wallet-adapter",
+		"solana"
+	]
 }

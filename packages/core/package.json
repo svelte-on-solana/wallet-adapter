@@ -31,5 +31,12 @@
         "@solana/web3.js": "^1.32.2",
         "eventemitter3": "^4.0.0",
         "svelte": "^3.0.0"
-    }
+    },
+    "keywords": [
+        "svelte",
+        "wallet",
+        "adapter",
+        "wallet-adapter",
+        "solana"
+    ]
 }
