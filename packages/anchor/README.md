@@ -12,6 +12,17 @@ npm i @svelte-on-solana/wallet-adapter-anchor
 
 ## Set Up
 
+Add `@project-serum/anchor` to `optimizeDeps`. This pre-bundles the `@project-serum/anchor` package. This steps converts commonJs dependencies into ESM ( Vite's dev server serves all code as native ESM ).
+
+```
+ kit: {
+    vite: {
+      optimizeDeps: {
+        include: ['@project-serum/anchor'],
+      },
+      // ---
+```
+
 The `AnchorConnectionProvider` for Anchor Dapps accepts the next props.
 
 | prop    | type     | default |
