@@ -1,9 +1,3 @@
-<script context="module" lang="ts">
-	import { Buffer } from 'buffer';
-
-	globalThis.Buffer = Buffer;
-</script>
-
 <script lang="ts">
 	import { Connection } from '@solana/web3.js';
 	import type { Commitment, ConnectionConfig } from '@solana/web3.js';
