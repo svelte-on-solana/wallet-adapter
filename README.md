@@ -1,19 +1,16 @@
 # `@svelte-on-solana/wallet-adapter`
 
-Modular TypeScript wallet adapter and UI components for Solana/Anchor applications using [SvelteJS](https://svelte.dev/) as framework. This package contains a solution for [Svelte Template](https://github.com/sveltejs/template) and [SvelteKit](https://kit.svelte.dev/), making possible to build Solana Dapps in SPA or SSR mode.
-
 ![Wallets](wallets-adapter.png)
 
-- [Demo repo](https://github.com/silvestrevivo/solana-svelte-counter/)
-- [Demo site](https://solana-svelte-counter.netlify.app/)
+Modular TypeScript wallet adapter and UI components for Solana/Anchor applications using [SvelteJS](https://svelte.dev/) as framework. This package contains a solution for [Svelte Template](https://github.com/sveltejs/template) and [SvelteKit](https://kit.svelte.dev/), making possible to build Solana Dapps in SPA or SSR mode.
 
-## How to setup
+[View demo][4] / [Browse demo code][5]
 
-To use the wallet adapter first of all you will need to install the core package. Then choose on the two different UI implementations, Svelte Template or SvelteKit.
+## Packages
 
-- [Installing the core package](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md/)
-- [Using Svelte Template](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md)
-- [Using SvelteKit](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md)
+- [Core][1] - Svelte Store which exposes methods and properties to run the wallet in your application
+- [UI][2] - Pre-built components for integrating with Solana wallets using Svelte
+- [Anchor][3] - Helper components for working with Anchor
 
 ## Build from Source
 
@@ -38,3 +35,9 @@ yarn build
 cd packages/ui/
 yarn start
 ```
+
+[1]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md/
+[2]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md
+[3]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md
+[4]: https://github.com/silvestrevivo/solana-svelte-counter/
+[5]: https://solana-svelte-counter.netlify.app/
