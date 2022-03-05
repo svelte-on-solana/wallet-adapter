@@ -38,6 +38,6 @@ yarn start
 
 [1]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md/
 [2]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md
-[3]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/ui/README.md
+[3]: https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md
 [4]: https://github.com/silvestrevivo/solana-svelte-counter/
 [5]: https://solana-svelte-counter.netlify.app/
