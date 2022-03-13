@@ -1,11 +1,11 @@
-import type {
+import {
     Adapter,
     MessageSignerWalletAdapter,
     MessageSignerWalletAdapterProps,
     SendTransactionOptions,
     SignerWalletAdapter,
     SignerWalletAdapterProps,
-	WalletReadyState,
+    WalletReadyState,
     WalletError,
     WalletName,
 } from '@solana/wallet-adapter-base';
@@ -15,17 +15,16 @@ import { get, writable } from 'svelte/store';
 import { WalletNotSelectedError } from './errors';
 import { getLocalStorage, setLocalStorage } from './localStorage';
 
-
 type ErrorHandler = (error: WalletError) => void;
 type WalletConfig = Pick<WalletStore, 'wallets' | 'autoConnect' | 'localStorageKey' | 'onError'>;
 type WalletStatus = Pick<WalletStore, 'connected' | 'publicKey'>;
 
 interface WalletStore {
-	// props
+    // props
     autoConnect: boolean;
     wallets: Adapter[];
 
-	// wallet state
+    // wallet state
     adapter: Adapter | null;
     connected: boolean;
     connecting: boolean;
@@ -38,7 +37,7 @@ interface WalletStore {
     walletsByName: Record<WalletName, Adapter>;
     name: WalletName | null;
 
-	// wallet methods
+    // wallet methods
     connect(): Promise<void>;
     disconnect(): Promise<void>;
     select(walletName: WalletName): void;
@@ -57,18 +56,15 @@ export const walletStore = createWalletStore();
 function addAdapterEventListeners(adapter: Adapter) {
     const { onError } = get(walletStore);
 
-	adapter.on('readyStateChange', onReadyStateChange);
+    adapter.on('readyStateChange', onReadyStateChange);
     adapter.on('connect', onConnect);
     adapter.on('disconnect', onDisconnect);
     adapter.on('error', onError);
 }
 
 async function autoConnect() {
-    const { adapter } = get(walletStore);
-
     try {
-        walletStore.setConnecting(true);
-        await adapter?.connect();
+        await connect();
     } catch (error: unknown) {
         // Clear the selected wallet
         walletStore.resetWallet();
@@ -81,10 +77,9 @@ async function autoConnect() {
 async function connect(): Promise<void> {
     const { connected, connecting, disconnecting, wallet, ready, adapter } = get(walletStore);
     if (connected || connecting || disconnecting) return;
-
     if (!adapter) throw newError(new WalletNotSelectedError());
 
-    if (!ready) {
+    if (!(ready == WalletReadyState.Installed || ready == WalletReadyState.Loadable)) {
         walletStore.resetWallet();
 
         if (typeof window !== 'undefined') {
@@ -116,7 +111,7 @@ function createWalletStore() {
         localStorageKey: 'walletAdapter',
         onError: (error: WalletError) => console.error(error),
         publicKey: null,
-        ready: "NotDetected" as WalletReadyState,
+        ready: 'NotDetected' as WalletReadyState,
         wallet: null,
         name: null,
         walletsByName: {},
@@ -142,9 +137,9 @@ function createWalletStore() {
 
         if (!adapter) return;
 
-		if (shouldAutoConnect()) {
-			autoConnect();
-		}
+        if (shouldAutoConnect()) {
+            autoConnect();
+        }
     }
 
     function updateWalletName(name: WalletName | null) {
@@ -194,7 +189,13 @@ function createWalletStore() {
             addAdapterEventListeners(adapter);
         }
 
-        update((store: WalletStore) => ({ ...store, adapter, signTransaction, signAllTransactions, signMessage }));
+        update((store: WalletStore) => ({
+            ...store,
+            adapter,
+            signTransaction,
+            signAllTransactions,
+            signMessage,
+        }));
     }
 
     return {
@@ -275,17 +276,17 @@ function onDisconnect() {
 }
 
 function onReadyStateChange() {
-	const { adapter } = get(walletStore);
-	if (!adapter) return;
+    const { adapter } = get(walletStore);
+    if (!adapter) return;
 
-	walletStore.setReady(adapter.readyState);
+    walletStore.setReady(adapter.readyState);
 }
 
 function removeAdapterEventListeners(): void {
     const { adapter, onError } = get(walletStore);
     if (!adapter) return;
 
-	adapter.off('readyStateChange', onReadyStateChange);
+    adapter.off('readyStateChange', onReadyStateChange);
     adapter.off('connect', onConnect);
     adapter.off('disconnect', onDisconnect);
     adapter.off('error', onError);
