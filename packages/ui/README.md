@@ -19,7 +19,7 @@ During this process, you will:
 You have already installed the core package to run the wallet Svelte Store [@svelte-on-solana/wallet-adapter-core](github.com/svelte-on-solana/wallet-adapter/blob/master/packages/core/README.md). Then install the UI components contained in this package
 
 ```shell
-npm i @svelte-on-solana/wallet-adapter-svelte-ui
+npm i @svelte-on-solana/wallet-adapter-ui
 ```
 
 ## Set Up
