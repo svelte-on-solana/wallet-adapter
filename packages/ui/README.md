@@ -63,8 +63,14 @@ const config = {
 
 	kit: {
 		// ...
-		define: {
-			'process.env.BROWSER': true
+		vite: {
+			// ...
+			define: {
+				'process.env.BROWSER': true
+			},
+			optimizeDeps: {
+				include: ['@solana/web3.js', 'buffer']
+			}
 		}
 	}
 };
