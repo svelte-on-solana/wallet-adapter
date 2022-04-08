@@ -59,12 +59,17 @@ You have to adjust the **svelte.config.js** file to prepare the project for all 
 
 ```javascript
 const config = {
-	preprocess: preprocess(),
-
+	// ...
 	kit: {
 		// ...
-		define: {
-			'process.env.BROWSER': true
+		vite: {
+			// ...
+			define: {
+				'process.env.BROWSER': true
+			},
+			optimizeDeps: {
+				include: ['@solana/web3.js', 'buffer']
+			}
 		}
 	}
 };
@@ -144,7 +149,7 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
-			preferBuiltins: false // set this to false
+			preferBuiltins: false
 		}),
 		// ... more rollup plugins
 		json(),
