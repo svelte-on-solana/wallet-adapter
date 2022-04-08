@@ -150,7 +150,7 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
-			preferBuiltins: false // set this to false
+			preferBuiltins: false
 		}),
 		// ... more rollup plugins
 		json(),
