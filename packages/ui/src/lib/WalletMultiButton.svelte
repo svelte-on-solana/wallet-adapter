@@ -72,7 +72,7 @@
 
 {#if !wallet}
 	<WalletButton class="wallet-adapter-button-trigger" on:click={openModal}>
-		Select Wallet
+		<slot>Select Wallet</slot>
 	</WalletButton>
 {:else if !base58}
 	<WalletConnectButton />
