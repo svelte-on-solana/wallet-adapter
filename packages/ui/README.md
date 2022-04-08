@@ -59,8 +59,7 @@ You have to adjust the **svelte.config.js** file to prepare the project for all 
 
 ```javascript
 const config = {
-	preprocess: preprocess(),
-
+	// ...
 	kit: {
 		// ...
 		vite: {
