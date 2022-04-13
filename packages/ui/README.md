@@ -53,6 +53,10 @@ Alternatively you can use `AnchorConnectionProvider` for Anchor Dapps.
 
 `WalletMultiButton` is a component used as the entry point to connect/disconnect a wallet.
 
+| prop               | type     | default |
+| ------------------ | -------- | ------- |
+| maxNumberOfWallets | `number` | `3`     |
+
 ## SvelteKit
 
 You have to adjust the **svelte.config.js** file to prepare the project for all the Solana packages previously installed.

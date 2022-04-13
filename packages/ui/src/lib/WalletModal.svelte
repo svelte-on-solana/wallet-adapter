@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import WalletButton from './WalletButton.svelte';
 
-	export let maxNumberOfWallets = 3;
+	export let maxNumberOfWallets;
 
 	let showMoreOptions = false,
 		backdrop: HTMLDivElement,
@@ -79,7 +79,7 @@
 					class:wallet-adapter-modal-collapse-button-active={showMoreOptions}
 					on:click={() => toggleMoreOptions()}
 				>
-					{showMoreOptions ? 'Less' : 'More'} options
+					{showMoreOptions ? 'Fewer' : 'More'} options
 
 					<svg width="11" height="6" xmlns="http://www.w3.org/2000/svg">
 						<path

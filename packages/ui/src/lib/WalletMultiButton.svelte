@@ -5,6 +5,8 @@
 	import WalletModal from './WalletModal.svelte';
 	import './styles.css';
 
+	export let maxNumberOfWallets = 3;
+
 	$: ({ publicKey, wallet, disconnect, connect, select } = $walletStore);
 
 	let dropDrownVisible = false,
@@ -90,7 +92,6 @@
 				class="wallet-adapter-dropdown-list wallet-adapter-dropdown-list-active"
 				role="menu"
 				use:clickOutside={() => {
-					console.log(`clickOutsiede`, dropDrownVisible);
 					if (dropDrownVisible) {
 						closeDropdown();
 					}
@@ -115,5 +116,5 @@
 {/if}
 
 {#if modalVisible}
-	<WalletModal on:close={closeModal} on:connect={connectWallet} />
+	<WalletModal on:close={closeModal} on:connect={connectWallet} {maxNumberOfWallets} />
 {/if}
