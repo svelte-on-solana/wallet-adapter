@@ -20,7 +20,7 @@ type ErrorHandler = (error: WalletError) => void;
 type WalletConfig = Pick<WalletStore, 'wallets' | 'autoConnect' | 'localStorageKey' | 'onError'>;
 type WalletStatus = Pick<WalletStore, 'connected' | 'publicKey'>;
 
-interface WalletStore {
+export interface WalletStore {
 	// props
     autoConnect: boolean;
     wallets: Adapter[];
