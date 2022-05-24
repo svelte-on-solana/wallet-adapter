@@ -5,25 +5,31 @@ import type {
     SendTransactionOptions,
     SignerWalletAdapter,
     SignerWalletAdapterProps,
-	WalletReadyState,
     WalletError,
     WalletName,
 } from '@solana/wallet-adapter-base';
+import type { WalletReadyState } from '@solana/wallet-adapter-base';
 import { WalletNotConnectedError, WalletNotReadyError } from '@solana/wallet-adapter-base';
 import type { Connection, PublicKey, Transaction, TransactionSignature } from '@solana/web3.js';
 import { get, writable } from 'svelte/store';
 import { WalletNotSelectedError } from './errors';
 import { getLocalStorage, setLocalStorage } from './localStorage';
 
+interface Wallet {
+    adapter: Adapter;
+    readyState: WalletReadyState;
+}
 
 type ErrorHandler = (error: WalletError) => void;
-type WalletConfig = Pick<WalletStore, 'wallets' | 'autoConnect' | 'localStorageKey' | 'onError'>;
+type WalletPropsConfig = Pick<WalletStore, 'autoConnect' | 'localStorageKey' | 'onError'> & { wallets: Adapter[]};
+type WalletReturnConfig = Pick<WalletStore, 'wallets' | 'autoConnect' | 'localStorageKey' | 'onError'>;
+
 type WalletStatus = Pick<WalletStore, 'connected' | 'publicKey'>;
 
 export interface WalletStore {
 	// props
     autoConnect: boolean;
-    wallets: Adapter[];
+    wallets: Wallet[];
 
 	// wallet state
     adapter: Adapter | null;
@@ -55,9 +61,11 @@ export interface WalletStore {
 export const walletStore = createWalletStore();
 
 function addAdapterEventListeners(adapter: Adapter) {
-    const { onError } = get(walletStore);
+    const { onError, wallets } = get(walletStore);
 
-	adapter.on('readyStateChange', onReadyStateChange);
+    wallets.forEach(({adapter}) => {
+        adapter.on('readyStateChange', onReadyStateChange, adapter);
+    })
     adapter.on('connect', onConnect);
     adapter.on('disconnect', onDisconnect);
     adapter.on('error', onError);
@@ -79,12 +87,12 @@ async function autoConnect() {
 }
 
 async function connect(): Promise<void> {
-    const { connected, connecting, disconnecting, wallet, ready, adapter } = get(walletStore);
+    const { connected, connecting, disconnecting, ready, adapter } = get(walletStore);
     if (connected || connecting || disconnecting) return;
 
     if (!adapter) throw newError(new WalletNotSelectedError());
 
-    if (!ready) {
+    if (!(ready === 'Installed' || ready === 'Loadable' as WalletReadyState)) {
         walletStore.resetWallet();
 
         if (typeof window !== 'undefined') {
@@ -116,7 +124,7 @@ function createWalletStore() {
         localStorageKey: 'walletAdapter',
         onError: (error: WalletError) => console.error(error),
         publicKey: null,
-        ready: "NotDetected" as WalletReadyState,
+        ready: 'Unsupported' as WalletReadyState,
         wallet: null,
         name: null,
         walletsByName: {},
@@ -135,7 +143,7 @@ function createWalletStore() {
             ...store,
             name: adapter?.name || null,
             wallet: adapter,
-            ready: adapter?.readyState as WalletReadyState,
+            ready: adapter?.readyState || 'Unsupported' as WalletReadyState,
             publicKey: adapter?.publicKey || null,
             connected: adapter?.connected || false,
         }));
@@ -203,11 +211,12 @@ function createWalletStore() {
         setDisconnecting: (disconnecting: boolean) => update((store: WalletStore) => ({ ...store, disconnecting })),
         setReady: (ready: WalletReadyState) => update((store: WalletStore) => ({ ...store, ready })),
         subscribe,
-        updateConfig: (walletConfig: WalletConfig & { walletsByName: Record<WalletName, Adapter> }) =>
+        updateConfig: (walletConfig: WalletReturnConfig & { walletsByName: Record<WalletName, Adapter> }) =>
             update((store: WalletStore) => ({
                 ...store,
                 ...walletConfig,
             })),
+        updateWallets: (wallets: Wallet[]) => update((store: WalletStore) => ({ ...store, ...wallets })),
         updateStatus: (walletStatus: WalletStatus) => update((store: WalletStore) => ({ ...store, ...walletStatus })),
         updateWallet: (walletName: WalletName) => updateWalletName(walletName),
     };
@@ -233,14 +242,20 @@ export async function initialize({
     autoConnect = false,
     localStorageKey = 'walletAdapter',
     onError = (error: WalletError) => console.error(error),
-}: WalletConfig): Promise<void> {
+}: WalletPropsConfig): Promise<void> {
     const walletsByName = wallets.reduce<Record<WalletName, Adapter>>((walletsByName, wallet) => {
         walletsByName[wallet.name] = wallet;
         return walletsByName;
     }, {});
 
+    // Wrap adapters to conform to the `Wallet` interface
+    const mapWallets = wallets.map((adapter) => ({
+        adapter,
+        readyState: adapter.readyState,
+    }))
+
     walletStore.updateConfig({
-        wallets,
+        wallets: mapWallets,
         walletsByName,
         autoConnect,
         localStorageKey,
@@ -274,18 +289,32 @@ function onDisconnect() {
     walletStore.resetWallet();
 }
 
-function onReadyStateChange() {
-	const { adapter } = get(walletStore);
+function onReadyStateChange(this: Adapter, readyState: WalletReadyState) {
+	const { adapter, wallets } = get(walletStore);
 	if (!adapter) return;
 
 	walletStore.setReady(adapter.readyState);
+
+    // When the wallets change, start to listen for changes to their `readyState`
+    const walletIndex = wallets.findIndex(({ adapter }) => adapter.name === this.name);
+    if (walletIndex === -1) {
+        return;
+    } else {
+        walletStore.updateWallets([
+            ...wallets.slice(0, walletIndex),
+            { ...wallets[walletIndex], readyState },
+            ...wallets.slice(walletIndex + 1),
+        ])
+    }
 }
 
 function removeAdapterEventListeners(): void {
-    const { adapter, onError } = get(walletStore);
+    const { adapter, onError, wallets } = get(walletStore);
     if (!adapter) return;
 
-	adapter.off('readyStateChange', onReadyStateChange);
+    wallets.forEach(({adapter}) => {
+        adapter.off('readyStateChange', onReadyStateChange, adapter);
+    })
     adapter.off('connect', onConnect);
     adapter.off('disconnect', onDisconnect);
     adapter.off('error', onError);
