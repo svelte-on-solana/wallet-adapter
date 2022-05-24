@@ -25,7 +25,7 @@ const config = {
 				'process.env.BROWSER': true
 			},
 			optimizeDeps: {
-				include: ['@project-serum/anchor']
+				include: ['@project-serum/anchor', '@solana/web3.js', 'buffer'],
 			}
 		}
 	}
