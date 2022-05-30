@@ -43,6 +43,11 @@
         await connect();
     }
 
+    async function disconnectWallet(event) {
+        closeDropdown();
+        await disconnect();
+    }
+
     interface CallbackType {
         (arg?: string): void;
     }
@@ -119,7 +124,7 @@
                     Connect a different wallet
                 </li>
                 <li
-                    on:click={disconnect}
+                    on:click={disconnectWallet}
                     class="wallet-adapter-dropdown-list-item"
                     role="menuitem"
                 >
