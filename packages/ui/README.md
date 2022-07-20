@@ -59,24 +59,23 @@ Alternatively you can use `AnchorConnectionProvider` for Anchor Dapps.
 
 ## SvelteKit
 
-You have to adjust the **svelte.config.js** file to prepare the project for all the Solana packages previously installed.
+You have to adjust the **vite.config.js** file to prepare the project for all the Solana packages previously installed.
 
 ```javascript
+import { sveltekit } from '@sveltejs/kit/vite'
+
+/** @type {import('vite').UserConfig} */
 const config = {
-	// ...
-	kit: {
-		// ...
-		vite: {
-			// ...
-			define: {
-				'process.env.BROWSER': true
-			},
-			optimizeDeps: {
-				include: ['@solana/web3.js', 'buffer']
-			}
-		}
+	plugins: [sveltekit()],
+	define: {
+		'process.env.BROWSER': true
+	},
+	optimizeDeps: {
+		include: ['@solana/web3.js', 'buffer']
 	}
-};
+}
+
+export default config
 ```
 
 And then in the **\_\_layout.svelte** component you can import the wallets and setup the UI components.
