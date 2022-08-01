@@ -103,7 +103,6 @@
                 class="wallet-adapter-dropdown-list wallet-adapter-dropdown-list-active"
                 role="menu"
                 use:clickOutside={() => {
-                    console.log(`clickOutsiede`, dropDrownVisible);
                     if (dropDrownVisible) {
                         closeDropdown();
                     }
