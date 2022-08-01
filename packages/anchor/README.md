@@ -46,7 +46,6 @@ In the **\_\_layout.svelte** component you can import the wallets and setup the 
 
 ```html
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
 	import { WalletProvider, WalletMultiButton } from '@svelte-on-solana/wallet-adapter-ui';
 	import { AnchorConnectionProvider, workSpace } from '@svelte-on-solana/wallet-adapter-anchor';
@@ -57,15 +56,7 @@ In the **\_\_layout.svelte** component you can import the wallets and setup the 
 	const localStorageKey = 'walletAdapter';
 	const network = clusterApiUrl('devnet'); // localhost or mainnet
 
-	let wallets;
-
-	onMount(async () => {
-		const { PhantomWalletAdapter, SolflareWalletAdapter } = await import(
-			'@solana/wallet-adapter-wallets'
-		);
-
-		wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];
-	});
+	let wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];;
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
