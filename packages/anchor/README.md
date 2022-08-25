@@ -20,12 +20,12 @@ import { sveltekit } from '@sveltejs/kit/vite'
 /** @type {import('vite').UserConfig} */
 const config = {
 	plugins: [sveltekit()],
-	define: {
-		'process.env.BROWSER': true
-	},
+	// ... use the same implementation from the SvelteKit ui
 	optimizeDeps: {
 		include: ['@project-serum/anchor', '@solana/web3.js', 'buffer'],
+		// ... use the same implementation from the SvelteKit ui
 	}
+	// ... use the same implementation from the SvelteKit ui
 }
 
 export default config
@@ -51,12 +51,31 @@ In the **\_\_layout.svelte** component you can import the wallets and setup the 
 	import { AnchorConnectionProvider, workSpace } from '@svelte-on-solana/wallet-adapter-anchor';
 	import { clusterApiUrl } from '@solana/web3.js';
 	import idl from '../../../target/idl/<my-anchor-project>.json';
-	import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 	const localStorageKey = 'walletAdapter';
 	const network = clusterApiUrl('devnet'); // localhost or mainnet
 
-	let wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];;
+	let wallets;
+
+	onMount(async () => {
+		const {
+		PhantomWalletAdapter,
+		SlopeWalletAdapter,
+		SolflareWalletAdapter,
+		SolletExtensionWalletAdapter,
+		TorusWalletAdapter,
+		} = await import('@solana/wallet-adapter-wallets');
+
+		const walletsMap = [
+			new PhantomWalletAdapter(),
+			new SlopeWalletAdapter(),
+			new SolflareWalletAdapter(),
+			new SolletExtensionWalletAdapter(),
+			new TorusWalletAdapter(),
+		];
+
+		wallets = walletsMap;
+	});
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />
