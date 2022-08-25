@@ -59,19 +59,44 @@ Alternatively you can use `AnchorConnectionProvider` for Anchor Dapps.
 
 ## SvelteKit
 
-You have to adjust the **vite.config.js** file to prepare the project for all the Solana packages previously installed.
+First you need to install some additional packages to make the Torus implementation compatible with SvelteKit.
+
+```shell
+npm install -D @esbuild-plugins/node-globals-polyfill @rollup/plugin-inject rollup-plugin-node-polyfills
+```
+
+Then you have to adjust the **vite.config.js** file to prepare the project for all the Solana packages previously installed.
 
 ```javascript
 import { sveltekit } from '@sveltejs/kit/vite'
 
-/** @type {import('vite').UserConfig} */
 const config = {
 	plugins: [sveltekit()],
-	define: {
-		'process.env.BROWSER': true
-	},
 	optimizeDeps: {
-		include: ['@solana/web3.js', 'buffer']
+		include: ['@solana/web3.js', 'buffer'],
+		esbuildOptions: {
+				target: 'esnext',
+				plugins: [NodeGlobalsPolyfillPlugin({ buffer: true })],
+		},
+	},
+	resolve: {
+		alias: {
+			$utils: path.resolve('src/utils/'),
+			stream: 'rollup-plugin-node-polyfills/polyfills/stream',
+		},
+	},
+	define: {
+		'process.env.BROWSER': true,
+		'process.env.NODE_DEBUG': JSON.stringify(''),
+	},
+	build: {
+		target: 'esnext',
+		commonjsOptions: {
+			transformMixedEsModules: true
+		},
+		rollupOptions: {
+			plugins: [inject({ Buffer: ['buffer', 'Buffer'] }), nodePolyfills({ crypto: true })],
+		},
 	}
 }
 
@@ -82,6 +107,7 @@ And then in the **\_\_layout.svelte** component you can import the wallets and s
 
 ```html
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { clusterApiUrl } from '@solana/web3.js';
 	import {
 		workSpace,
@@ -89,12 +115,31 @@ And then in the **\_\_layout.svelte** component you can import the wallets and s
 		WalletMultiButton,
 		ConnectionProvider
 	} from '@svelte-on-solana/wallet-adapter-ui';
-	import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 	const localStorageKey = 'walletAdapter';
 	const network = clusterApiUrl('devnet'); // localhost or mainnet
 
-	let wallets = [new PhantomWalletAdapter(), new SolflareWalletAdapter()];;
+	let wallets;
+
+	onMount(async () => {
+		const {
+		PhantomWalletAdapter,
+		SlopeWalletAdapter,
+		SolflareWalletAdapter,
+		SolletExtensionWalletAdapter,
+		TorusWalletAdapter,
+		} = await import('@solana/wallet-adapter-wallets');
+
+		const walletsMap = [
+			new PhantomWalletAdapter(),
+			new SlopeWalletAdapter(),
+			new SolflareWalletAdapter(),
+			new SolletExtensionWalletAdapter(),
+			new TorusWalletAdapter(),
+		];
+
+		wallets = walletsMap;
+	});
 </script>
 
 <WalletProvider {localStorageKey} {wallets} autoConnect />

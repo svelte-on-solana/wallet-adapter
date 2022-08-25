@@ -3,6 +3,7 @@
     import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
     import { createEventDispatcher } from 'svelte';
     import WalletButton from './WalletButton.svelte';
+    import type { WalletName } from '@solana/wallet-adapter-base';
 
     export let maxNumberOfWallets;
 
@@ -21,12 +22,8 @@
 
     const dispatch = createEventDispatcher();
 
-    function connect(name, url, readyState) {
-        if (readyState === 'Installed') {
-            dispatch('connect', name);
-        } else {
-            window.open(url, '_blank');
-        }
+    function connect(name) {
+        dispatch('connect', name);
     }
 
     function toggleMoreOptions() {
@@ -45,6 +42,17 @@
 
     function handleKeyup(e) {
         if (e.key == 'Escape') {
+            dispatch('close');
+        }
+    }
+    function getStarted() {
+        const torusWallet = $walletStore.wallets.find(
+            (wallet: { adapter: { name: WalletName } }) =>
+                wallet.adapter.name === 'Torus',
+            );
+        if (torusWallet) {
+            connect(torusWallet.adapter.name);
+        } else {
             dispatch('close');
         }
     }
@@ -84,7 +92,7 @@
                     {#each $walletStore.wallets.slice(0, numberOfWalletsShown) as { adapter: { name, icon, url }, readyState }}
                         <li>
                             <WalletButton
-                                on:click={() => connect(name, url, readyState)}
+                                on:click={() => connect(name)}
                             >
                                 {name}
 
@@ -233,7 +241,7 @@
                     <button
                         type="button"
                         class="wallet-adapter-modal-middle-button"
-                        on:click={() => dispatch('close')}>Get started</button
+                        on:click={getStarted}>Get started</button
                     >
                 </div>
                 <button
@@ -269,7 +277,7 @@
                             <li>
                                 <WalletButton
                                     on:click={() =>
-                                        connect(name, url, readyState)}
+                                        connect(name)}
                                 >
                                     {name}
 
