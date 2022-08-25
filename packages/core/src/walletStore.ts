@@ -8,8 +8,7 @@ import type {
     WalletError,
     WalletName,
 } from '@solana/wallet-adapter-base';
-import type { WalletReadyState } from '@solana/wallet-adapter-base';
-import { WalletNotConnectedError, WalletNotReadyError } from '@solana/wallet-adapter-base';
+import { WalletNotConnectedError, WalletNotReadyError, WalletReadyState } from '@solana/wallet-adapter-base';
 import type { Connection, PublicKey, Transaction, TransactionSignature } from '@solana/web3.js';
 import { get, writable } from 'svelte/store';
 import { WalletNotSelectedError } from './errors';
@@ -92,7 +91,7 @@ async function connect(): Promise<void> {
 
     if (!adapter) throw newError(new WalletNotSelectedError());
 
-    if (!(ready === 'Installed' || ready === 'Loadable' as WalletReadyState)) {
+    if (!(ready === WalletReadyState.Installed || ready === WalletReadyState.Loadable)) {
         walletStore.resetWallet();
 
         if (typeof window !== 'undefined') {
@@ -344,7 +343,16 @@ async function sendTransaction(
 function shouldAutoConnect(): boolean {
     const { adapter, autoConnect, ready, connected, connecting } = get(walletStore);
 
-    return !(!autoConnect || !adapter || !ready || connected || connecting);
+    return !(
+        !autoConnect ||
+        !adapter ||
+        !(
+          ready === WalletReadyState.Installed ||
+          ready === WalletReadyState.Loadable
+        ) ||
+        connected ||
+        connecting
+    );
 }
 
 if (typeof window !== 'undefined') {
