@@ -10,7 +10,7 @@ During this process, you will:
 
 -   📦 Install the base wallet adapters
 -   📦 Install the svelte adapter and svelte UI
--   🔨 Add the `ConnectionProvider` (`[AnchorConnectionProvider](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md)` if you're using Anchor)
+-   🔨 Add the `ConnectionProvider` ([`AnchorConnectionProvider`](https://github.com/svelte-on-solana/wallet-adapter/blob/master/packages/anchor/README.md) if you're using Anchor)
 -   🔨 Add the `WalletProvider` component
 -   🔨 Add the `WalletMultiButton` component
 
