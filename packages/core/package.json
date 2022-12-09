@@ -27,8 +27,8 @@
         "postbuild": "echo '{\"type\":\"commonjs\"}' | npx json > lib/cjs/package.json && echo '{\"type\":\"module\"} ' | npx json > lib/esm/package.json"
     },
     "dependencies": {
-        "@solana/wallet-adapter-base": "^0.9.16",
-        "@solana/web3.js": "^1.53.0",
+        "@solana/wallet-adapter-base": "^0.9.19",
+        "@solana/web3.js": "^1.70.0",
         "eventemitter3": "^4.0.7",
         "svelte": "^3.0.0"
     },
