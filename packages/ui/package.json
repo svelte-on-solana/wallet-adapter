@@ -30,7 +30,6 @@
 		"typescript": "^4.4.3"
 	},
 	"dependencies": {
-		"@types/node-fetch": "^2.6.2",
 		"eventemitter3": "^4.0.7"
 	},
 	"keywords": [
