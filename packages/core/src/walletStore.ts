@@ -5,7 +5,6 @@ import type {
     SendTransactionOptions,
     SignerWalletAdapter,
     SignerWalletAdapterProps,
-    TransactionOrVersionedTransaction,
     WalletError,
     WalletName,
 } from '@solana/wallet-adapter-base';
