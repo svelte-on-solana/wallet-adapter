@@ -9,7 +9,7 @@ import type {
     WalletName,
 } from '@solana/wallet-adapter-base';
 import { WalletNotConnectedError, WalletNotReadyError, WalletReadyState } from '@solana/wallet-adapter-base';
-import type { Connection, PublicKey, Transaction, TransactionSignature } from '@solana/web3.js';
+import type { Connection, PublicKey, Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
 import { get, writable } from 'svelte/store';
 import { WalletNotSelectedError } from './errors';
 import { getLocalStorage, setLocalStorage } from './localStorage';
@@ -173,7 +173,7 @@ function createWalletStore() {
         if (adapter) {
             // Sign a transaction if the wallet supports it
             if ('signTransaction' in adapter) {
-                signTransaction = async function (transaction: Transaction) {
+                signTransaction = async function <T extends Transaction | VersionedTransaction>(transaction: T) {
                     const { connected } = get(walletStore);
                     if (!connected) throw newError(new WalletNotConnectedError());
                     return await adapter.signTransaction(transaction);
@@ -182,7 +182,7 @@ function createWalletStore() {
 
             // Sign multiple transactions if the wallet supports it
             if ('signAllTransactions' in adapter) {
-                signAllTransactions = async function (transactions: Transaction[]) {
+                signAllTransactions = async function <T extends Transaction | VersionedTransaction>(transactions: T[]) {
                     const { connected } = get(walletStore);
                     if (!connected) throw newError(new WalletNotConnectedError());
                     return await adapter.signAllTransactions(transactions);
