@@ -48,7 +48,7 @@ export interface WalletStore {
     disconnect(): Promise<void>;
     select(walletName: WalletName): void;
     sendTransaction(
-        transaction: Transaction,
+        transaction: Transaction | VersionedTransaction,
         connection: Connection,
         options?: SendTransactionOptions
     ): Promise<TransactionSignature>;
