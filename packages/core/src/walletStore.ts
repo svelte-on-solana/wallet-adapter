@@ -329,7 +329,7 @@ async function select(walletName: WalletName): Promise<void> {
 }
 
 async function sendTransaction(
-    transaction: Transaction,
+    transaction: Transaction | VersionedTransaction,
     connection: Connection,
     options?: SendTransactionOptions
 ): Promise<TransactionSignature> {
