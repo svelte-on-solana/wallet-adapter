@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { slide } from 'svelte/transition';
+    import { fade, slide } from 'svelte/transition';
     import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
     import { createEventDispatcher } from 'svelte';
     import WalletButton from './WalletButton.svelte';
@@ -63,8 +63,9 @@
 <div
     aria-labelledby="wallet-adapter-modal-title"
     aria-modal="true"
-    class="wallet-adapter-modal wallet-adapter-modal-fade-in"
+    class="wallet-adapter-modal"
     role="dialog"
+    transition:fade
     bind:this={backdrop}
     on:click={e => closeModal(e)}
 >
