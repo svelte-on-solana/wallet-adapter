@@ -32,7 +32,7 @@
 		"eventemitter3": "^4.0.7"
 	},
 	"peerDependencies": {
-		"@project-serum/anchor": "^0.24.2"
+		"@project-serum/anchor": "^0.26.0"
 	},
 	"keywords": [
 		"svelte",
