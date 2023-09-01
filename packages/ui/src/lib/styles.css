@@ -105,6 +105,7 @@
     font-weight: 600;
     height: 37px;
     color: #fff;
+    background-color: transparent;
 }
 
 .wallet-adapter-dropdown-list-item:not([disabled]):hover {
