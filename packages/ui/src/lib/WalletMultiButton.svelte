@@ -32,6 +32,12 @@
     };
     const closeModal = () => (modalVisible = false);
 
+    function handleKeyup(e) {
+        if (e.key == 'Escape') {
+            closeDropdown();
+        }
+    }
+
     function showAddressContent(store) {
         const base58 = store.publicKey?.toBase58();
         if (!store.wallet || !base58) return null;
@@ -49,6 +55,8 @@
         await disconnect();
     }
 </script>
+
+<svelte:window on:keyup={handleKeyup} />
 
 {#if !wallet}
     <WalletButton class="wallet-adapter-button-trigger" on:click={openModal}>
