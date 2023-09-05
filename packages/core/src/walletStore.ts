@@ -165,7 +165,11 @@ function createWalletStore() {
 
     function updateAdapter(adapter: Adapter | null) {
         removeAdapterEventListeners();
+        if (adapter) addAdapterEventListeners(adapter);
+        update((store: WalletStore) => ({ ...store, adapter }));
+    }
 
+    function updateAdapterFeatures(adapter: Adapter) {
         let signTransaction: SignerWalletAdapter['signTransaction'] | undefined = undefined;
         let signAllTransactions: SignerWalletAdapter['signAllTransactions'] | undefined = undefined;
         let signMessage: MessageSignerWalletAdapter['signMessage'] | undefined = undefined;
@@ -197,11 +201,9 @@ function createWalletStore() {
                     return await adapter.signMessage(message);
                 };
             }
-
-            addAdapterEventListeners(adapter);
         }
 
-        update((store: WalletStore) => ({ ...store, adapter, signTransaction, signAllTransactions, signMessage }));
+        update((store: WalletStore) => ({ ...store, signTransaction, signAllTransactions, signMessage }));
     }
 
     return {
@@ -218,6 +220,7 @@ function createWalletStore() {
         updateWallets: (wallets: Wallet[]) => update((store: WalletStore) => ({ ...store, ...wallets })),
         updateStatus: (walletStatus: WalletStatus) => update((store: WalletStore) => ({ ...store, ...walletStatus })),
         updateWallet: (walletName: WalletName) => updateWalletName(walletName),
+        updateFeatures: (adapter: Adapter) => updateAdapterFeatures(adapter),
     };
 }
 
@@ -278,6 +281,7 @@ function onConnect() {
     const { adapter } = get(walletStore);
     if (!adapter) return;
 
+    walletStore.updateFeatures(adapter);
     walletStore.updateStatus({
         publicKey: adapter.publicKey,
         connected: adapter.connected,
