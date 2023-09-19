@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "@solana/wallet-adapter-base": "^0.9.23",
-        "@solana/web3.js": "^1.78.4",
+        "@solana/web3.js": "^1.78.5",
         "svelte": "^3.0.0"
     },
     "keywords": [

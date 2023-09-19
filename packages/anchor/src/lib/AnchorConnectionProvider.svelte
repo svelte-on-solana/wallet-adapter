@@ -2,7 +2,7 @@
 	import { Connection } from '@solana/web3.js';
 	import type { Commitment, ConnectionConfig } from '@solana/web3.js';
 	import { workSpace } from './workSpace';
-	import { web3, Program, AnchorProvider } from '@project-serum/anchor';
+	import { web3, Program, AnchorProvider } from '@coral-xyz/anchor';
 	import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
 
 	export let idl,

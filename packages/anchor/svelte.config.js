@@ -10,8 +10,8 @@ const config = {
 		vite: {
 			adapter: adapter(),
 			optimizeDeps: {
-        include: ['@project-serum/anchor', '@solana/web3.js'],
-      },
+				include: ['@coral-xyz/anchor', '@solana/web3.js']
+			},
 			resolve: {
 				alias: {
 					$lib: path.resolve('src/lib/')
