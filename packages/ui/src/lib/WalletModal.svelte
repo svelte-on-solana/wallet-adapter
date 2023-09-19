@@ -3,14 +3,13 @@
     import { walletStore } from '@svelte-on-solana/wallet-adapter-core';
     import { createEventDispatcher } from 'svelte';
     import WalletButton from './WalletButton.svelte';
+    import { clickOutside } from './clickOutside';
     import type { WalletName } from '@solana/wallet-adapter-base';
 
     export let maxNumberOfWallets;
 
     let showMoreOptions = false,
-        showExtensionsAvailables = false,
-        backdrop: HTMLDivElement,
-        container: HTMLDivElement;
+        showExtensionsAvailables = false;
 
     $: numberOfWalletsShown = showMoreOptions
         ? $walletStore.wallets.length
@@ -34,10 +33,8 @@
         showExtensionsAvailables = !showExtensionsAvailables;
     }
 
-    function closeModal(e) {
-        if (e.target === backdrop || e.target === container) {
-            dispatch('close');
-        }
+    function closeModal() {
+        dispatch('close');
     }
 
     function handleKeyup(e) {
@@ -65,11 +62,9 @@
     aria-modal="true"
     class="wallet-adapter-modal wallet-adapter-modal-fade-in"
     role="dialog"
-    bind:this={backdrop}
-    on:click={e => closeModal(e)}
 >
-    <div class="wallet-adapter-modal-container" bind:this={container}>
-        <div class="wallet-adapter-modal-wrapper">
+    <div class="wallet-adapter-modal-container">
+        <div class="wallet-adapter-modal-wrapper" use:clickOutside={closeModal}>
             <h1 class="wallet-adapter-modal-title">
                 {walletsAvailable
                     ? 'Connect a wallet on Solana to continue'

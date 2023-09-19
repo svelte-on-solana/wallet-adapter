@@ -3,6 +3,7 @@
     import WalletButton from './WalletButton.svelte';
     import WalletConnectButton from './WalletConnectButton.svelte';
     import WalletModal from './WalletModal.svelte';
+    import { clickOutside } from './clickOutside';
     import './styles.css';
 
     export let maxNumberOfWallets = 3;
@@ -31,6 +32,12 @@
     };
     const closeModal = () => (modalVisible = false);
 
+    function handleKeyup(e) {
+        if (e.key == 'Escape') {
+            closeDropdown();
+        }
+    }
+
     function showAddressContent(store) {
         const base58 = store.publicKey?.toBase58();
         if (!store.wallet || !base58) return null;
@@ -47,38 +54,9 @@
         closeDropdown();
         await disconnect();
     }
-
-    interface CallbackType {
-        (arg?: string): void;
-    }
-
-    function clickOutside(
-        node: HTMLElement,
-        callbackFunction: CallbackType,
-    ): unknown {
-        function onClick(event: MouseEvent) {
-            if (
-                node &&
-                event.target instanceof Node &&
-                !node.contains(event.target) &&
-                !event.defaultPrevented
-            ) {
-                callbackFunction();
-            }
-        }
-
-        document.body.addEventListener('click', onClick, true);
-
-        return {
-            update(newCallbackFunction: CallbackType) {
-                callbackFunction = newCallbackFunction;
-            },
-            destroy() {
-                document.body.removeEventListener('click', onClick, true);
-            },
-        };
-    }
 </script>
+
+<svelte:window on:keyup={handleKeyup} />
 
 {#if !wallet}
     <WalletButton class="wallet-adapter-button-trigger" on:click={openModal}>
@@ -108,26 +86,20 @@
                     }
                 }}
             >
-                <li
-                    on:click={copyAddress}
-                    class="wallet-adapter-dropdown-list-item"
-                    role="menuitem"
-                >
-                    {copied ? 'Copied' : 'Copy address'}
+                <li role="menuitem">
+                    <button class="wallet-adapter-dropdown-list-item" on:click={copyAddress}>
+                        {copied ? 'Copied' : 'Copy address'}
+                    </button>
                 </li>
-                <li
-                    on:click={openModal}
-                    class="wallet-adapter-dropdown-list-item"
-                    role="menuitem"
-                >
-                    Connect a different wallet
+                <li role="menuitem">
+                    <button class="wallet-adapter-dropdown-list-item" on:click={openModal}>
+                        Connect a different wallet
+                    </button>
                 </li>
-                <li
-                    on:click={disconnectWallet}
-                    class="wallet-adapter-dropdown-list-item"
-                    role="menuitem"
-                >
-                    Disconnect
+                <li role="menuitem">
+                    <button class="wallet-adapter-dropdown-list-item" on:click={disconnectWallet}>
+                        Disconnect
+                    </button>
                 </li>
             </ul>
         {/if}
