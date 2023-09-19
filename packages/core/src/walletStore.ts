@@ -266,9 +266,7 @@ export async function initialize({
 
     const walletName = getLocalStorage<WalletName>(localStorageKey);
 
-    if (walletName) {
-        walletStore.updateWallet(walletName);
-    }
+    if (walletName) await select(walletName);
 }
 
 function newError(error: WalletError): WalletError {
